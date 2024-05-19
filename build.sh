@@ -1,0 +1,1 @@
+cargo build --release --target wasm32-unknown-unknown && cp target/wasm32-unknown-unknown/release/learn_spade.wasm dist/learn_spade.wasm
