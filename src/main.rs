@@ -68,13 +68,16 @@ async fn main() {
             spade::PositionInTriangulation::OnEdge(_) => {}
             spade::PositionInTriangulation::OnFace(face_handle) => {
                 let face = cdt.face(face_handle);
+
+                // for the purposes of this illustration, a triangle face is a "constraint face" if two or more of its edges are constrained
                 let is_constraint_face = face
                     .adjacent_edges()
                     .iter()
                     .filter(|edge_handle| cdt.directed_edge(edge_handle.fix()).is_constraint_edge())
                     .count()
-                    > 1;
+                    >= 2;
 
+                // let's shade the "constraint faces"
                 if is_constraint_face {
                     let [a, b, c] = face.positions();
                     let mut col = mq::PURPLE;
@@ -88,7 +91,31 @@ async fn main() {
                 }
             }
             spade::PositionInTriangulation::OutsideOfConvexHull(_) => {}
-            spade::PositionInTriangulation::NoTriangulation => {}
+            spade::PositionInTriangulation::NoTriangulation => {
+                // if the user has not added any points, let's show some instructions
+                let line1 = "This is an interactive Spade demo. Add boxes to the triangulation with the mouse.";
+                let line2 = "Hold 'B' to show a box preview, then click to add the box's edges to the triangulation as constraints.";
+                let font_size = 15;
+
+                let line1_center = mq::get_text_center(line1, None, font_size, 1., 0.);
+                let line2_center = mq::get_text_center(line2, None, font_size, 1., 0.);
+
+                mq::draw_text(
+                    line1,
+                    mq::screen_width() / 2. - line1_center.x,
+                    mq::screen_height() / 2. - line1_center.y - 25.,
+                    font_size as f32,
+                    mq::BLACK,
+                );
+
+                mq::draw_text(
+                    line2,
+                    mq::screen_width() / 2. - line2_center.x,
+                    mq::screen_height() / 2. - line2_center.y + 25.,
+                    font_size as f32,
+                    mq::BLACK,
+                );
+            }
         }
 
         mq::draw_text(format!("{:?}", info).as_str(), 10., 20., 12., mq::BLACK);
