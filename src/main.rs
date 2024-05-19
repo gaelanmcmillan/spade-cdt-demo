@@ -1,7 +1,7 @@
 use macroquad::prelude as mq;
 use spade::{ConstrainedDelaunayTriangulation, Triangulation};
 
-#[macroquad::main("Learning Spade")]
+#[macroquad::main("Spade CDT Demo")]
 async fn main() {
     let mut cdt = ConstrainedDelaunayTriangulation::<spade::Point2<f32>>::new();
 
